@@ -1,5 +1,14 @@
 # Galgame Studio · 视觉小说编辑器
 
+本编辑器目前仅支持中文界面。
+
+## 下载
+
+- [安卓安装包](https://github.com/i4EXD/galgame-studio/releases/download/v1.1.0/GalgameStudio-1.1.0-release.apk)：支持 Android 10 及以上。
+- [电脑离线版](https://github.com/i4EXD/galgame-studio/releases/download/v1.1.0/GalgameStudio-1.1.0-PC.html)：下载后使用 Edge 或 Chrome 打开。
+- [完整源码与原始美术素材](https://github.com/i4EXD/galgame-studio/archive/refs/heads/main.zip)。
+- [版本说明与全部下载文件](https://github.com/i4EXD/galgame-studio/releases/tag/v1.1.0)。
+
 ## 1.1.0 新增
 
 - 批量导入台词：剧本列表底部可粘贴多行文本，每行生成一句；支持 `角色名：台词` 和 `旁白：台词`，一次撤销即可恢复。
