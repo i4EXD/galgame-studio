@@ -1,20 +1,17 @@
-# Art Templates
+# 美术模板
 
-Created with the built-in imagegen tool. Original PNG files are preserved here;
-`src/art-assets.json` contains offline WebP copies used by the editor and APK.
+使用内置图像生成工具制作。此目录保留原始 PNG 图片；
+`src/art-assets.json` 保存编辑器和安卓安装包使用的离线 WebP 副本。
 
-Rebuild embedded assets:
+重新生成内嵌素材：
 
 ```sh
 node tools/_bake-assets.mjs assets-src/templates src/art-assets.json
 ```
 
-Prompt set: wide 16:9 anime visual novel background paintings, eye-level,
-no people, readable text, logos or UI; lower quarter uncluttered for dialogue.
+通用生成提示词：16:9 横向动漫视觉小说背景画，平视视角；
+不出现人物、可读文字、标志或界面元素；画面下方四分之一区域保持简洁，供对话框使用。
 
-- `coast.png`: Japanese seaside train station on a clear summer morning,
-  turquoise sea, white railings and clouds, bicycle, station bench and vegetation.
-- `neon.png`: Japanese side street on a rainy evening, laundromat with warm
-  windows, cyan and coral reflections, vending machine, cables and an umbrella.
-- `winter.png`: independent bookstore in winter, window overlooking a snowy
-  street, white shelves, teal armchair, reading table, red scarf and warm lamp.
+- `coast.png`（海风来信）：晴朗夏日清晨的日式海边车站，青绿色海面、白色栏杆与云朵、自行车、车站长椅和绿植。
+- `neon.png`（雨夜霓虹）：雨夜的日式街巷，窗内透出暖光的自助洗衣店、青色与珊瑚色倒影、自动售货机、电线和雨伞。
+- `winter.png`（冬日书店）：冬季的独立书店，窗外是落雪街道，室内有白色书架、蓝绿色扶手椅、阅读桌、红围巾和暖色台灯。
