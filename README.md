@@ -1,6 +1,6 @@
 # Galgame Studio · 视觉小说编辑器
 
-全部由AI生成（包括本界面）本编辑器目前仅支持中文界面。
+本编辑器目前仅支持中文界面。
 
 ## 下载
 
@@ -369,3 +369,11 @@ Android App 里同样存在 WebView 的 IndexedDB 中，卸载 App 会一起删�
 - 引擎与 UI 风格移植自 `backrooms-romance-galgame-development` 项目（《与你，坠入》· 后室恋爱视觉小说），
   其 React 组件被重写为零依赖的原生实现，并泛化成可配置的编辑器 + 运行时。
 - 示例作品的剧情、立绘与背景素材来自该项目，随编辑器一起作为演示内容。
+
+## 十、贡献者与 AI 工具
+
+- [i4EXD](https://github.com/i4EXD)：项目维护者。
+- [ChatGPT](https://chatgpt.com/)：AI 辅助工具。
+- [DeepSeek](https://www.deepseek.com/)：AI 辅助工具。
+
+以上 AI 工具列于项目致谢，不代表 GitHub 用户账号或自动统计的代码提交贡献者。
