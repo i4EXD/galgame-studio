@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Galgame Studio —— 零门槛视觉小说编辑器：可视化写剧本、上传立绘、一键导出可发布的单文件 HTML。" />
+    <title>Galgame Studio · 视觉小说编辑器</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23131d19'/%3E%3Cpath d='M16 6l7 9-7 11-7-11z' fill='none' stroke='%23bcd6b7' stroke-width='1.6'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      /* 启动自检：任何脚本错误都会显示在页面上，避免出现「白屏不知道发生了什么」 */
+      (function () {
+        function show(text) {
+          var box = document.getElementById('gs-fatal');
+          if (!box) {
+            box = document.createElement('pre');
+            box.id = 'gs-fatal';
+            box.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;max-height:46vh;overflow:auto;z-index:9999;margin:0;padding:14px 16px;border:1px solid #e39288;border-radius:6px;background:rgba(30,14,12,.96);color:#f2b9b0;font:12px/1.7 ui-monospace,Consolas,monospace;white-space:pre-wrap';
+            (document.body || document.documentElement).appendChild(box);
+          }
+          box.textContent += text + '\n';
+        }
+        window.__gsFatal = show;
+        window.addEventListener('error', function (event) {
+          show('[error] ' + (event.message || '') + ' @ ' + String(event.filename || '').split('/').pop() + ':' + event.lineno + ':' + event.colno);
+        });
+        window.addEventListener('unhandledrejection', function (event) {
+          var reason = event.reason;
+          show('[promise] ' + ((reason && (reason.stack || reason.message)) || String(reason)));
+        });
+        setTimeout(function () {
+          if (!document.querySelector('.gs-app, .gs-boot, .gm-app')) show('[warn] 界面在 12 秒内没有渲染出来：脚本可能被浏览器拦截（file:// 直接打开时请用 Chrome/Edge，或改用本地服务器）');
+        }, 12000);
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

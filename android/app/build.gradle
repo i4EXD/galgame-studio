@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.galgamestudio.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.galgamestudio.app"
+        minSdk 29          // Android 10+：用 MediaStore 写下载目录，无需任何存储权限
+        targetSdk 34
+        versionCode 2
+        versionName "1.1.0"
+        resConfigs "zh", "en"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // 用 debug 签名，直接产出「可以安装」的 release APK（本项目不发布到应用商店）
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true          // AGP 8 默认不生成 BuildConfig，这里要用它判断是否 debug 包
+    }
+
+    packagingOptions {
+        resources.excludes += ['META-INF/*.kotlin_module']
+    }
+}
+
+// androidx 各库传递进来的 Kotlin 版本不一致（stdlib 1.8.22 与 stdlib-jdk8 1.6.21 撞车），
+// 统一到一个版本即可（1.9+ 的 jdk7/jdk8 是空壳模块，不会再重复类）。
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+            details.useVersion '1.9.24'
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

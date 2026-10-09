@@ -1,0 +1,22 @@
+# 依赖与构建产物
+node_modules/
+dist/
+dist-android/
+.tmp/
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/app/src/main/assets/www/
+
+# 开发期验证产物（tools/ 里的脚本会生成）
+_export/
+_shot/
+_test.html
+
+# 编辑器
+.vscode/
+.idea/
+*.log

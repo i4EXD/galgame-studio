@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 无 ActionBar + 深色底：启动瞬间就是编辑器的底色，不会闪白屏 -->
+    <style name="Theme.GalgameStudio" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/gs_bg</item>
+        <item name="android:statusBarColor">@color/gs_panel</item>
+        <item name="android:navigationBarColor">@color/gs_panel</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:colorAccent">@color/gs_accent</item>
+    </style>
+</resources>

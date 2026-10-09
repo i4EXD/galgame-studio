@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>产物验证 · Galgame Studio</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #111; }
+      iframe { width: 100%; height: 100vh; border: 0; display: block; }
+      #report { position: fixed; left: 0; top: 0; right: 0; z-index: 9; margin: 0; padding: 10px 14px;
+        background: rgba(0, 0, 0, .9); color: #9f9; font: 13px/1.7 Consolas, monospace; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <!-- 开发用页面（不参与生产构建）：
+         ?save=1        走真实导出流程并渲染结果，同时把 HTML 落盘到 _sink
+         ?roundtrip=1   验证「导出项目文件 → 打开项目文件」的数据往返是否无损 -->
+    <iframe id="stage" title="导出的单文件 HTML"></iframe>
+    <script type="module">
+      import { demoProject } from '/src/demo.ts';
+      import { buildStandaloneHtml, buildProjectFile } from '/src/exporter.ts';
+      import { THEME_PRESETS, normalizeProject } from '/src/types.ts';
+
+      const params = new URLSearchParams(location.search);
+      const sink = `http://127.0.0.1:${params.get('sink') || 4402}/`;
+
+      /* ---------------- 项目文件往返验证 ---------------- */
+      if (params.get('roundtrip')) {
+        const project = demoProject();
+        const file = buildProjectFile(project);
+        const parsed = JSON.parse(file.content);
+        const restored = normalizeProject(parsed);
+        const rows = [
+          ['文件名', file.filename],
+          ['项目文件大小', `${(file.content.length / 1024).toFixed(0)} KB`],
+          ['台词', `${project.lines.length} → ${restored.lines.length}`],
+          ['章节', `${project.chapters.length} → ${restored.chapters.length}`],
+          ['角色', `${project.characters.length} → ${restored.characters.length}`],
+          ['素材', `${project.assets.length} → ${restored.assets.length}`],
+          ['表情（nozomi）', `${project.characters[0].expressions.length} → ${restored.characters[0].expressions.length}`],
+          ['标题', `${project.title} → ${restored.title}`],
+          ['副标题', `${project.subtitle} → ${restored.subtitle}`],
+          ['主题预设', `${project.theme.preset} → ${restored.theme.preset}`],
+          ['阅读设置.存档位', `${project.settings.saves} → ${restored.settings.saves}`],
+          ['台词文本逐句一致', project.lines.every((line, i) => line.text === restored.lines[i]?.text) ? '是' : '否'],
+          ['说话人引用一致', project.lines.every((line, i) => line.speakerId === restored.lines[i]?.speakerId) ? '是' : '否'],
+          ['演出方式一致', project.lines.every((line, i) => line.presentation === restored.lines[i]?.presentation) ? '是' : '否'],
+          ['章节背景引用一致', project.chapters.every((c, i) => c.backgroundId === restored.chapters[i]?.backgroundId) ? '是' : '否'],
+          ['素材数据逐张一致', project.assets.every((a, i) => a.src === restored.assets[i]?.src) ? '是' : '否'],
+          ['表情抠图参数一致', project.characters[0].expressions.every((e, i) => e.keyColor === restored.characters[0].expressions[i]?.keyColor && e.tolerance === restored.characters[0].expressions[i]?.tolerance) ? '是' : '否'],
+          ['结局文案一致', project.settings.endingText === restored.settings.endingText ? '是' : '否'],
+        ];
+        const text = rows.map(([label, value]) => `${label}: ${value}`).join('\n');
+        const box = document.createElement('pre');
+        box.id = 'report';
+        box.textContent = `项目文件往返验证\n${text}`;
+        document.body.appendChild(box);
+        console.log(text);
+        const failed = rows.filter(([, value]) => /→/.test(String(value)) ? String(value).split('→')[0].trim() !== String(value).split('→')[1].trim() : value === '否');
+        const summary = failed.length ? `不一致 ${failed.length} 项: ${failed.map(r => r[0]).join('、')}` : '全部一致';
+        console.log('往返结论:', summary);
+        await fetch(`${sink}?name=roundtrip.txt`, { method: 'POST', body: `${text}\n\n往返结论: ${summary}\n` });
+        await fetch(`${sink}?name=roundtrip-failed.txt`, { method: 'POST', body: String(failed.length) });
+        document.getElementById('stage').remove();
+      }
+
+      /* ---------------- 单文件 HTML 导出验证 ---------------- */
+      if (!params.get('roundtrip')) {
+        const project = demoProject();
+        const wanted = params.get('theme');
+        if (wanted) {
+          const preset = THEME_PRESETS.find(item => item.id === wanted);
+          if (preset) project.theme = { ...project.theme, ...preset.theme };
+        }
+        const built = await buildStandaloneHtml(project, { webFonts: params.get('fonts') === '1' });
+        window.__galBuilt = built;
+        document.getElementById('stage').srcdoc = built.html;
+        console.log('导出结果', built.filename, Math.round(built.bytes / 1024) + 'KB', built.notes);
+        if (params.get('save')) {
+          const response = await fetch(`${sink}?name=export.html`, { method: 'POST', body: built.html });
+          console.log('落盘:', response.status, await response.text());
+        }
+      }
+    </script>
+  </body>
+</html>

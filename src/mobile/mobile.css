@@ -1,0 +1,198 @@
+/* ============================================================================
+   Galgame Studio · 移动端外壳样式（手机 / 窄屏 / Android App）
+   目标：单手可用、点击区域够大、软键盘不挡住正在编辑的内容。
+   ========================================================================== */
+
+.gm-app {
+  height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;          /* 横向一旦被内容撑开，顶栏按钮就会被挤到屏幕外 */
+  background: var(--gs-bg);
+  color: var(--gs-text);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ------------------------------------------------------------------ 顶栏 */
+.gm-top {
+  flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+  height: 58px; padding: 0 14px;
+  border-bottom: 1px solid var(--gs-line);
+  background: linear-gradient(180deg, #17231e, #121b17);
+}
+.gm-logo { position: relative; width: 22px; height: 27px; flex-shrink: 0; }
+.gm-logo > span { position: absolute; width: 15px; height: 20px; border: 1px solid var(--gs-accent); transform: rotate(35deg); top: 2px; left: 1px; }
+.gm-logo > span:nth-child(2) { left: 8px; top: 8px; border-color: var(--gs-accent-2); }
+.gm-logo > i { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: var(--gs-accent); top: 0; left: 14px; }
+
+.gm-title {
+  flex: 1 1 0; min-width: 0; overflow: hidden;
+  display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 6px 4px;
+}
+.gm-title b { display: block; max-width: 100%; font-family: var(--gs-serif); font-size: 16px; letter-spacing: 1px; color: var(--gs-ink); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-title small { display: block; max-width: 100%; font-size: 10px; color: var(--gs-faint); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-title-input { flex: 1; padding: 8px 10px; font-family: var(--gs-serif); font-size: 16px; }
+
+.gm-icon {
+  display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0;
+  border-radius: 50%; color: var(--gs-muted); background: rgba(188, 214, 183, .06);
+  border: 1px solid var(--gs-line);
+}
+.gm-icon:active { background: rgba(188, 214, 183, .18); color: var(--gs-ink); }
+
+/* ------------------------------------------------------------------ 页签 */
+.gm-tabs {
+  flex-shrink: 0; display: flex; gap: 4px; padding: 8px 10px;
+  overflow-x: auto; border-bottom: 1px solid var(--gs-line);
+  background: rgba(10, 16, 13, .35);
+  scrollbar-width: none;
+}
+.gm-tabs::-webkit-scrollbar { display: none; }
+.gm-tab {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 9px 14px; border-radius: 20px; font-size: 13px; color: var(--gs-muted);
+  border: 1px solid transparent; transition: background .16s, color .16s;
+}
+.gm-tab.is-on { background: linear-gradient(180deg, rgba(188, 214, 183, .2), rgba(188, 214, 183, .11)); color: var(--gs-ink); border-color: rgba(188, 214, 183, .24); }
+
+/* ------------------------------------------------------------------ 内容 */
+.gm-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding-bottom: 78px; -webkit-overflow-scrolling: touch; }
+.gm-body .gs-section { padding: 14px 14px; }
+.gm-body .gs-section-head h3 { font-size: 13px; }
+.gm-body .gs-section-head p { font-size: 11px; }
+.gm-body .gs-input { font-size: 16px; padding: 11px 12px; }      /* 16px 起，避免移动端自动缩放 */
+.gm-body .gs-btn { padding: 11px 14px; font-size: 14px; }
+.gm-body .gs-btn-sm { padding: 9px 12px; font-size: 13px; }
+.gm-body .gs-field { margin-bottom: 15px; }
+.gm-body .gs-field-label { font-size: 12px; }
+.gm-body .gs-card { padding: 11px; }
+.gm-body .gs-line { padding: 11px 10px; }
+.gm-body .gs-line-actions { opacity: 1; }                        /* 手机上没有 hover，操作按钮常显 */
+.gm-body .gs-assetgrid { grid-template-columns: repeat(3, 1fr); }
+.gm-body .gs-expgrid { grid-template-columns: repeat(4, 1fr); }
+.gm-body .gs-tips li, .gm-body .gs-note { font-size: 12px; }
+.gm-body .gs-empty { padding: 30px 18px; }
+
+/* ------------------------------------------------------------- 底部把手 */
+.gm-handle {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: flex; align-items: center; gap: 10px;
+  min-height: 62px; padding: 12px 96px calc(12px + env(safe-area-inset-bottom)) 16px;
+  background: linear-gradient(180deg, rgba(19, 29, 25, .96), rgba(13, 20, 17, .99));
+  border-top: 1px solid var(--gs-line-strong);
+  backdrop-filter: blur(12px);
+  color: var(--gs-text); font-size: 13.5px; text-align: left;
+}
+.gm-handle > span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-handle.is-idle { color: var(--gs-faint); font-size: 12.5px; }
+.gm-handle:not(.is-idle):active { background: rgba(188, 214, 183, .12); }
+
+/* 常驻的撤销 / 重做（手机上没有键盘快捷键） */
+.gm-undo {
+  position: fixed; right: 12px; bottom: calc(11px + env(safe-area-inset-bottom)); z-index: 21;
+  display: flex; gap: 6px;
+}
+.gm-undo button {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(188, 214, 183, .12); border: 1px solid var(--gs-line-strong); color: var(--gs-text);
+  transition: opacity .15s, background .15s;
+}
+.gm-undo button:active:not(:disabled) { background: rgba(188, 214, 183, .26); }
+.gm-undo button:disabled { opacity: .3; }
+
+/* ------------------------------------------------------------- 底部抽屉 */
+.gm-sheet-backdrop {
+  position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end;
+  background: rgba(5, 10, 8, .62); backdrop-filter: blur(4px);
+  animation: gm-fade .18s ease;
+}
+.gm-sheet-backdrop.is-front { z-index: 70; align-items: center; justify-content: center; padding: 20px; }
+.gm-sheet {
+  width: 100%; max-height: 82dvh; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, #1b2923, #121c18);
+  border-top: 1px solid var(--gs-line-strong);
+  border-radius: 18px 18px 0 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  animation: gm-slide .22s ease;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, .5);
+}
+.gm-sheet.is-menu { max-height: 72dvh; }
+.gm-sheet-head {
+  position: relative; flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+  padding: 16px 14px 12px; border-bottom: 1px solid var(--gs-line);
+}
+.gm-sheet-grip { position: absolute; top: 7px; left: 50%; transform: translateX(-50%); width: 42px; height: 4px; border-radius: 2px; background: rgba(188, 214, 183, .3); }
+.gm-sheet-head strong { flex: 1; min-width: 0; font-size: 14px; font-weight: 500; color: var(--gs-ink); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.gm-sheet-body .gs-section { padding: 14px 16px; }
+.gm-sheet-body .gs-section-head h3 { font-size: 13px; }
+.gm-sheet-body .gs-input { font-size: 16px; padding: 11px 12px; }
+.gm-sheet-body .gs-btn { padding: 11px 14px; font-size: 14px; }
+.gm-sheet-body .gs-textarea { font-size: 16px; }
+.gm-confirm { width: 100%; max-width: 420px; padding: 20px; border-radius: 12px; background: var(--gs-panel-3); border: 1px solid var(--gs-line-strong); }
+.gm-confirm p { font-size: 13.5px; line-height: 1.9; margin-bottom: 14px; }
+
+@keyframes gm-fade { from { opacity: 0; } }
+@keyframes gm-slide { from { transform: translateY(24px); opacity: .6; } }
+
+/* ------------------------------------------------------------------ 菜单 */
+.gm-menulist { display: flex; flex-direction: column; padding: 6px 0; }
+.gm-menuitem {
+  display: flex; align-items: center; gap: 14px; padding: 16px; text-align: left;
+  border-bottom: 1px solid var(--gs-line); color: var(--gs-text);
+}
+.gm-menuitem:active { background: rgba(188, 214, 183, .09); }
+.gm-menuitem > svg:first-child { color: var(--gs-accent-2); flex-shrink: 0; }
+.gm-menuitem > span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.gm-menuitem b { font-size: 14.5px; font-weight: 500; color: var(--gs-ink); }
+.gm-menuitem small { font-size: 11.5px; color: var(--gs-faint); }
+.gm-menuitem:disabled { opacity: .5; }
+
+/* ------------------------------------------------------------------ 书架 */
+.gm-booklist { display: flex; flex-direction: column; padding: 6px 0; }
+.gm-book { display: flex; align-items: stretch; border-bottom: 1px solid var(--gs-line); }
+.gm-book-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 13px; padding: 14px 8px 14px 16px; text-align: left; }
+.gm-book-main:active { background: rgba(188, 214, 183, .08); }
+.gm-book-icon { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px; background: rgba(188, 214, 183, .12); color: var(--gs-accent); }
+.gm-book-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.gm-book-body b { font-size: 14.5px; font-weight: 500; color: var(--gs-ink); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-book-body small { font-size: 11px; color: var(--gs-faint); }
+.gm-book-main > svg { color: var(--gs-accent-2); flex-shrink: 0; }
+.gm-book-del { display: grid; place-items: center; width: 52px; flex-shrink: 0; color: var(--gs-faint); }
+.gm-book-del:active { color: var(--gs-danger); background: rgba(227, 146, 136, .12); }
+
+/* ---------------------------------------------------------------- 全屏层 */
+.gm-fullscreen {
+  position: fixed; inset: 0; z-index: 80; background: #060b09;
+  display: flex; flex-direction: column;
+}
+.gm-fullscreen .gs-preview { padding: 6px; height: 100%; }
+.gm-fullscreen .gs-preview-bar { padding: 0 6px; flex-shrink: 0; }
+/* 手机上不需要「16:9 / 9:16」切换：预览本来就铺满屏幕 */
+.gm-fullscreen .gs-seg { display: none; }
+/* 竖屏时让播放器铺满整屏：它自己就有完整的移动端适配，这样才是手机上真实的观感。
+   注意特异性要压过 editor.css 里的 .gs-preview.is-desktop .gs-preview-frame iframe。 */
+.gm-fullscreen .gs-preview.is-desktop .gs-preview-frame iframe,
+.gm-fullscreen .gs-preview.is-mobile .gs-preview-frame iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+.gm-close {
+  position: absolute; top: calc(10px + env(safe-area-inset-top)); right: 12px; z-index: 3;
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(10, 18, 15, .72); border: 1px solid var(--gs-line-strong); color: var(--gs-text);
+  backdrop-filter: blur(8px);
+}
+.gm-fullscreen.is-reader { background: #000; }
+.gm-reader { flex: 1; width: 100%; border: 0; background: #000; }
+.gm-reader-fallback { flex: 1; display: grid; place-items: center; padding: 24px; }
+
+/* 触摸设备上不要 hover 效果残留 */
+@media (hover: none) {
+  .gs-btn:hover:not(:disabled) { background: rgba(255, 255, 255, .015); border-color: var(--gs-line-strong); color: var(--gs-text); }
+  .gs-card:hover { border-color: var(--gs-line); background: rgba(255, 255, 255, .012); }
+}
